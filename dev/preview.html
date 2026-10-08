@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<!-- The pane outside VS Code, for working on its looks. Open this file in a browser.
+     ?theme=chatgpt|claude  &kind=dark|light  &zoom=100  &runs=b,c (only those of the sample's runs)
+     The --vscode-* colours below stand in for a VS Code theme (Dark Modern and Light Modern). -->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Codex Sidecar preview</title>
+<style>
+	body.vscode-dark {
+		--vscode-editor-background: #1f1f1f; --vscode-foreground: #cccccc; --vscode-descriptionForeground: #9d9d9d;
+		--vscode-widget-border: #313131; --vscode-editorWidget-background: #202020; --vscode-textCodeBlock-background: #2b2b2b;
+		--vscode-textLink-foreground: #4daafc; --vscode-testing-iconPassed: #73c991; --vscode-testing-iconFailed: #f14c4c;
+		--vscode-toolbar-hoverBackground: rgba(90, 93, 94, .31); --vscode-editor-selectionBackground: #264f78;
+	}
+	body.vscode-light {
+		--vscode-editor-background: #ffffff; --vscode-foreground: #3b3b3b; --vscode-descriptionForeground: #717171;
+		--vscode-widget-border: #e5e5e5; --vscode-editorWidget-background: #f8f8f8; --vscode-textCodeBlock-background: #ededed;
+		--vscode-textLink-foreground: #005fb8; --vscode-testing-iconPassed: #388a34; --vscode-testing-iconFailed: #f14c4c;
+		--vscode-toolbar-hoverBackground: rgba(184, 184, 184, .31); --vscode-editor-selectionBackground: #add6ff;
+	}
+	body { --vscode-font-family: "Segoe WPC", "Segoe UI", sans-serif; --vscode-editor-font-family: Consolas, "Courier New", monospace; }
+</style>
+<link rel="stylesheet" href="../media/pane.css">
+</head>
+<body>
+<script>
+	const query = new URLSearchParams(location.search);
+	document.body.className = query.get('kind') === 'light' ? 'vscode-light' : 'vscode-dark';
+	window.acquireVsCodeApi = () => ({ postMessage: message => console.log('to the extension:', message) });
+</script>
+<script src="sample.js"></script>
+<script src="../media/pane.js"></script>
+<script>
+	const send = message => window.dispatchEvent(new MessageEvent('message', { data: message }));
+	send({ t: 'prefs', theme: query.get('theme') || 'chatgpt', zoom: Number(query.get('zoom')) || 100 });
+	const wanted = query.get('runs');
+	for (const sample of window.SAMPLE.filter(one => !wanted || wanted.split(',').includes(one.run.id))) {
+		send({ t: 'start', run: sample.run });
+		let at = sample.run.started;
+		send({ t: 'events', id: sample.run.id, events: sample.events.map(event => ({ at: (at += 4000), line: JSON.stringify(event) })) });
+		if (sample.end) send({ t: 'end', id: sample.run.id, ...sample.end });
+	}
+	window.scrollTo(0, 0);
+</script>
+</body>
+</html>

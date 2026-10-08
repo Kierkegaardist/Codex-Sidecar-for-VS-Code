@@ -1,0 +1,7 @@
+{"type":"thread.started","thread_id":"stand-in"}
+{"type":"turn.started"}
+{"type":"item.completed","item":{"id":"item_0","type":"agent_message","text":"Understood. I'll leave that step and do as you say."}}
+{"type":"item.started","item":{"id":"item_1","type":"command_execution","command":"\"powershell.exe\" -Command 'Get-Content -LiteralPath lantern.txt'","aggregated_output":"","exit_code":null,"status":"in_progress"}}
+{"type":"item.completed","item":{"id":"item_1","type":"command_execution","command":"\"powershell.exe\" -Command 'Get-Content -LiteralPath lantern.txt'","aggregated_output":"a lantern\r\n","exit_code":0,"status":"completed"}}
+{"type":"item.completed","item":{"id":"item_2","type":"agent_message","text":"Done, with your message taken into account: **lantern.txt** says \"a lantern\"."}}
+{"type":"turn.completed","usage":{"input_tokens":1500,"cached_input_tokens":1200,"output_tokens":40}}

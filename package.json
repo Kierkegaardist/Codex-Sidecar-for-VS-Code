@@ -1,0 +1,82 @@
+{
+	"name": "codex-sidecar-vscode",
+	"displayName": "Codex Sidecar",
+	"description": "Watch Codex work, live, in a pane beside Claude Code, Cursor, Copilot or another coding agent, and step in while it works. For Windows, macOS and Linux.",
+	"version": "1.0.2",
+	"publisher": "Kierkegaardist",
+	"license": "MIT",
+	"repository": { "type": "git", "url": "https://github.com/Kierkegaardist/Codex-Sidecar-for-VS-Code.git" },
+	"homepage": "https://github.com/Kierkegaardist/Codex-Sidecar-for-VS-Code#readme",
+	"sponsor": { "url": "https://ko-fi.com/kierkegaardist" },
+	"icon": "media/icon.png",
+	"engines": { "vscode": "^1.85.0" },
+	"categories": ["AI", "Other"],
+	"bugs": { "url": "https://github.com/Kierkegaardist/Codex-Sidecar-for-VS-Code/issues" },
+	"galleryBanner": { "color": "#0d1017", "theme": "dark" },
+	"pricing": "Free",
+	"keywords": ["codex", "codex cli", "claude code", "cursor", "copilot", "ai agent", "subagent", "code review", "windows"],
+	"extensionKind": ["workspace"],
+	"main": "./extension.js",
+	"activationEvents": ["onStartupFinished"],
+	"scripts": { "vscode:uninstall": "node ./uninstall.js" },
+	"contributes": {
+		"commands": [
+			{ "command": "codexSidecar.show", "title": "Codex Sidecar: Show the latest run" },
+			{ "command": "codexSidecar.copySetup", "title": "Codex Sidecar: Copy the instructions for another agent" }
+		],
+		"configuration": {
+			"title": "Codex Sidecar",
+			"properties": {
+				"codexSidecar.theme": {
+					"type": "string",
+					"default": "chatgpt",
+					"markdownDescription": "How the pane looks: `chatgpt` (its own colours, in the manner of ChatGPT, dark or light after your VS Code theme), `claude` (every colour and font from your VS Code theme, laid out like the Claude Code panel), or the name of a theme of your own. The round button at the top of the pane changes this, and is where your own themes are made."
+				},
+				"codexSidecar.themes": {
+					"type": "object",
+					"default": {},
+					"markdownDescription": "Themes of your own, by name. They are made and changed with the round button at the top of the pane; this is where they are kept. Each has a `base` (`chatgpt` or `claude`: which look it is laid out like) and `colors`: `background`, `text`, `dim`, `accent`, `bubble`, `card` and `line`, each as `#rrggbb`."
+				},
+				"codexSidecar.textSize": {
+					"type": "number",
+					"default": 100,
+					"minimum": 70,
+					"maximum": 170,
+					"description": "The size of the text in the pane, in percent. The A− and A+ buttons at the top of the pane change this too."
+				},
+				"codexSidecar.closeAfterMinutes": {
+					"type": "number",
+					"default": 2,
+					"minimum": 0,
+					"description": "Close a conversation's tab this many minutes after it has finished. The tab counts the time down and has a button that keeps it open. 0 never closes one."
+				},
+				"codexSidecar.whenFinished": {
+					"type": "string",
+					"enum": ["countdown", "close", "stay"],
+					"enumDescriptions": [
+						"The tab counts down for closeAfterMinutes, then closes. A button stops the countdown.",
+						"The tab closes the moment the conversation is over. It can be opened again from the overview.",
+						"The tab stays until you close it."
+					],
+					"default": "countdown",
+					"description": "What becomes of a conversation's tab once it has finished. The round button at the top of the pane changes this too."
+				},
+				"codexSidecar.openPanes": {
+					"type": "string",
+					"enum": ["automatically", "never"],
+					"enumDescriptions": [
+						"A pane opens when Codex is handed a task.",
+						"Nothing opens. A marker in the status bar shows that Codex is working; click it to open the pane."
+					],
+					"default": "automatically",
+					"description": "Whether a pane opens by itself when a run starts."
+				},
+				"codexSidecar.tellAgents": {
+					"type": "boolean",
+					"default": true,
+					"description": "Keep a skill named codex-sidecar in the folders agents read (~/.claude/skills for Claude Code; ~/.agents/skills for Copilot, Cursor and others). It tells them how to call Codex through the pane, in every project, so nothing needs setting up. Switched off, the skill is taken away."
+				}
+			}
+		}
+	}
+}
